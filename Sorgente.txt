@@ -1,0 +1,17 @@
+package com.mycompany;
+
+public class Sorgente {
+
+    
+
+    public static void main(String[] args) {
+        int x = 5;
+        int y = 10;
+        int sum = addNumbers(x, y);
+        System.out.println("Sum: " + sum);
+    }
+
+    public static int addNumbers(int a, int b) {
+        return a + b;
+    }
+}

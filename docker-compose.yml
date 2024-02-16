@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  rabbitmq-container:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - mynet
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 5s
+      retries: 12
+    command: ["rabbitmq-server"]
+
+  java-app-container:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - mynet
+    depends_on:
+      rabbitmq-container:
+        condition: service_healthy
+
+   
+  receiver-container:
+    build:
+      context: .
+      dockerfile: ./consumer/Dockerfile1
+    networks:
+      - mynet
+    depends_on:
+      rabbitmq-container:
+        condition: service_healthy
+
+networks:
+  mynet:
+    driver: bridge

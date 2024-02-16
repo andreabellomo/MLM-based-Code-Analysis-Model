@@ -1,0 +1,14 @@
+# Usa un'immagine di Python ufficiale
+FROM reciver_requirements
+
+WORKDIR /app
+
+COPY . .
+
+# Installa le dipendenze 
+#RUN pip install -r ./consumer/requirements.txt
+
+WORKDIR /app
+
+CMD python -u ./consumer/app.py
+
