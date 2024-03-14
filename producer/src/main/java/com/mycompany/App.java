@@ -35,59 +35,31 @@ public class App {
             result.put("X", raw);
             result.put("Y", real_token);
 
-           // System.out.println(result);
+          
         }
 
         return result;
     }
     
-   /* 
-    public static JSONObject applyMask(Statement statement) {
-        JSONObject result = new JSONObject();
-
-        // Ottieni il TokenRange dello statement
-        NodeList<TokenRange> tokenRanges = statement.getTokenRange().orElse(new NodeList<>()).getTokenRanges();
-        if (!tokenRanges.isEmpty()) {
-            int indexToReplace = new Random().nextInt(tokenRanges.size());
-            TokenRange tokenRange = tokenRanges.get(indexToReplace);
-            String realToken = tokenRange.toString();
-            statement.replace(tokenRange, "<mask>");
-            String maskedStatement = statement.toString();
-            result.put("X", maskedStatement);
-            result.put("Y", realToken);
-        }
-
-
-        return result;
-    }
-    
-*/
      public static void main(String[] args) {
 
         
         try {
 
             String filePath = "/producer/Sorgente.txt";
-            //String filePath = "C://Users//bello//Desktop//porg//Java_Parser_App//producer//Sorgente.txt";
+            
             List<Statement> statements = FileParser.parseFile(filePath);
             // Connessione a RabbitMQ
             try (Connection connection = RabbitConnect.createConnection();
                  Channel channel = RabbitConnect.createChannel(connection)) { // creo canale
 
-                RabbitConnect.declareQueue(channel); //dichiaro coda chiamando la funzona della classe
+                RabbitConnect.declareQueue(channel); //dichiaro coda chiamando la funzione della classe
 
-                // Parsing del file
-                //String filePath = "Sorgente.txt";
-                //List<Statement> statements = FileParser.parseFile(filePath); // parsing file usando la classe definita
-
+               
                 for (Statement statement : statements){
 
-                    //JSONObject message = new JSONObject();
-                    JSONObject message = apply_mask(statement);
                     
-                   // message.put("X", result[raw]);
-                  //  message.put("Y", statement.toString());
-
+                    JSONObject message = apply_mask(statement);
                     String msg = message.toString();
 
                     channel.basicPublish("", RabbitConnect.getQueueName(), null, msg.getBytes("UTF-8"));
