@@ -22,8 +22,17 @@ Il file Sorgente.txt nella cartella producer conterrà il codice java che sarà 
 
 # Demo
 
-## producter shell
+### producter shell
 ![Alt text](images/sender.png)
 
-## consumer shell
+### consumer shell
 ![Alt text](images/cns.png)
+
+## Modello utilizzato: CodeBERT
+
+Puoi trovare ulteriori dettagli e informazioni nel paper originale:
+
+- **Paper**: [CodeBERT: A Pre-Trained Model for Programming and Natural Languages](https://arxiv.org/pdf/2002.08155.pdf)
+- **GitHub**: [CodeBERT](https://github.com/microsoft/CodeBERT)
+
+
