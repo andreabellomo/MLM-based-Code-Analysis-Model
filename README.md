@@ -23,7 +23,7 @@ Il file Sorgente.txt nella cartella producer conterrà il codice java che sarà 
 # Demo
 
 ## producter shell
-![Alt text](path/to/image.png)
+![Alt text](images/sender.png)
 
 ## consumer shell
-
+![Alt text](images/cns.png)
