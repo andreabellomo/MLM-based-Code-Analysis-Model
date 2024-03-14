@@ -1,5 +1,5 @@
 import pika
-from process import classifier
+from process import Classifier
 import json
 import os
 from transformers import RobertaForMaskedLM, RobertaTokenizer
@@ -10,9 +10,13 @@ class Consumer:
     USER = 'guest'
     PASSWORD = 'guest'
     QUEUE_NAME = 'hello'
+    positive = 0
+    counter = 0
+    
+    
 
     def start_consumer(self):
-        print("Sono nel consumer")
+        #print("Sono nel consumer")
 
         #scarico il modello se non esiste
         model_path = '/app/consumer/model'
@@ -40,6 +44,8 @@ class Consumer:
             credentials=pika.PlainCredentials(Consumer.USER, Consumer.PASSWORD),
         )
 
+        
+
         try:
             with pika.BlockingConnection(connection_params) as connection:
                 channel = connection.channel()
@@ -57,16 +63,23 @@ class Consumer:
             print(f'Connection Error {e}')
 
     @staticmethod
-    def callback(channel, method, properties, body):
+    def callback(channel, method, properties, body,  ):
         try:
             #print(f'Ricevuto messaggio {body}')
             print('Ricevuto messaggio')
             decoded_body = body.decode('utf-8')
             decoded_body = json.loads(decoded_body)
-            print("Valore di X : " ,decoded_body["X"] )
-            print("Valore di Y : " ,decoded_body["Y"] )
-            classifier().start_classifier(decoded_body["X"])
+            print("Valore di X : " ,decoded_body["X"].replace('\n', '') )
+            print("Valore di Y : " ,decoded_body["Y"].replace('\n', '') )
+            Consumer.counter +=1
+            Consumer.accuracy = 0 if Consumer.counter == 0 else Consumer.positive / Consumer.counter
+            print("Accuracy:", Consumer.accuracy)
+
+            if(Classifier().start_classifier(decoded_body["X"],decoded_body["Y"].replace('\n', '')) == True):
+                print("predizione corretta")
+                Consumer.positive += 1
+                print("Predizioni corrette: " , Consumer.positive , "/", Consumer.counter)
+
             channel.basic_ack(delivery_tag=method.delivery_tag)
         except Exception as e:
             print(f'Errore elaborazione del messaggio: {e}')
-

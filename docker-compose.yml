@@ -17,14 +17,14 @@ services:
   java-app-container:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./producer/Dockerfile
     networks:
       - mynet
     depends_on:
       rabbitmq-container:
         condition: service_healthy
 
-   
+
   receiver-container:
     build:
       context: .
