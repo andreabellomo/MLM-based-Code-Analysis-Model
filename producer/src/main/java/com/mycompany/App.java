@@ -8,6 +8,8 @@ import com.rabbitmq.client.Connection;
 import com.github.javaparser.ast.stmt.Statement;
 import org.json.*;
 import java.util.StringTokenizer;
+import edu.stanford.nlp.simple.*;
+import java.util.ArrayList;
 
 import com.github.javaparser.ast.NodeList;
 
@@ -23,19 +25,17 @@ public class App {
         JSONObject result = new JSONObject();
 
         String raw = statement.toString();
+        List<String> words = new ArrayList<>(new Sentence(raw).words()); // Converti in una lista mutabile
         String real_token = "";
-        String[] words = raw.split("\\s+");
 
-        if (words.length > 0) {
-            int indexToReplace = random.nextInt(words.length);
-            real_token = words[indexToReplace];
-            words[indexToReplace] = "<mask>";
+        if (!words.isEmpty()) {
+            int indexToReplace = random.nextInt(words.size());
+            real_token = words.get(indexToReplace);
+            words.set(indexToReplace, "<mask>");
             raw = String.join(" ", words);
 
             result.put("X", raw);
             result.put("Y", real_token);
-
-          
         }
 
         return result;
