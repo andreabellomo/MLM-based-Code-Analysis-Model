@@ -1,3 +1,5 @@
+## eseguire prima D.txt rinominandolo Dockerfile per creare l'immaggine reciver_requirements con tutti i requisiti installati. Dopodiche eseguire compose.
+
 FROM reciver_requirements
 
 WORKDIR /app
