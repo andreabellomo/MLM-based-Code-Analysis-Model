@@ -3,7 +3,7 @@
 
 L’elaborato sviluppato si concentra su come applicare concretamente un modello di Masked Language Model (MLM), realizzando due micro-servizi
 che comunicano tra di loro. L'obiettivo principale è quello di progettare e implementare due servizi autonomi, in grado di interagire in maniera asincrona usando RabbitMQ. Questi servizi saranno
-dedicati alla manipolazione e all’analisi di codice sorgente Java,utilizzando modelli di Masked Language Models per la predizione di porzioni oscure di
+dedicati alla manipolazione e all’analisi di codice sorgente Java,utilizzando modelli di Masked Language Models per la predizione di porzioni oscurate di
 codice.
 
 # Istruzioni
