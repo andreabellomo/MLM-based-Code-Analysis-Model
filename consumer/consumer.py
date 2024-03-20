@@ -9,7 +9,7 @@ class Consumer:
     PORT = 5672
     USER = 'guest'
     PASSWORD = 'guest'
-    QUEUE_NAME = 'hello'
+    QUEUE_NAME = 'my_queue'
     positive = 0
     counter = 0
     

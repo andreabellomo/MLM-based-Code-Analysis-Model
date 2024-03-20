@@ -7,7 +7,7 @@ import com.rabbitmq.client.Connection;
 
 public class RabbitConnect {
 
-    private final static String QUEUE_NAME = "hello";
+    private final static String QUEUE_NAME = "my_queue";
 
     public static String getQueueName() {
         return QUEUE_NAME;
