@@ -19,16 +19,26 @@ import com.github.javaparser.Token;
 public class App {
 
     private static final Random random = new Random();
+    public static int num = 0;
+    public static int maxLength = 350;
 
      
     public static JSONObject apply_mask(Statement statement) {
         JSONObject result = new JSONObject();
+        num++;
+        
 
         String raw = statement.toString();
         List<String> words = new ArrayList<>(new Sentence(raw).words()); // Converti in una lista mutabile
         String real_token = "";
 
         if (!words.isEmpty()) {
+            
+            System.out.println("num : " +num + " SIZE = " + words.size());
+
+            if(words.size() > maxLength)
+                words = words.subList(0, maxLength);
+            
             int indexToReplace = random.nextInt(words.size());
             real_token = words.get(indexToReplace);
             words.set(indexToReplace, "<mask>");
