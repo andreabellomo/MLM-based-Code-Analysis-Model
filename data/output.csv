@@ -1,0 +1,105 @@
+X#Y#result#predicted_token
+{ deck = new ArrayList < > ( ) ; playerHand = <mask> ArrayList < > ( ) ; dealerHand = new ArrayList < > ( ) ; scanner = new Scanner ( System.in ) ; initializeDeck ( ) ; }#new#True#new
+deck = <mask> ArrayList < > ( ) ;#new#True#new
+playerHand = <mask> ArrayList < > ( ) ;#new#True#new
+dealerHand = <mask> ArrayList < > ( ) ;#new#True#new
+scanner = <mask> Scanner ( System.in ) ;#new#True#new
+{ <mask> ( Suit suit : Suit.values ( ) ) { for ( Rank rank : Rank.values ( ) ) { deck.add ( new Card ( rank , suit ) ) ; } } Collections.shuffle ( deck ) ; }#for#True#for
+for ( Suit suit : Suit.values ( ) ) { <mask> ( Rank rank : Rank.values ( ) ) { deck.add ( new Card ( rank , suit ) ) ; } }#for#True#for
+{ <mask> ( Rank rank : Rank.values ( ) ) { deck.add ( new Card ( rank , suit ) ) ; } }#for#True#for
+for ( Rank rank : Rank.values ( ) ) { deck.add ( <mask> Card ( rank , suit ) ) ; }#new#True#new
+{ deck.add ( <mask> Card ( rank , suit ) ) ; }#new#True#new
+deck.add ( <mask> Card ( rank , suit ) ) ;#new#True#new
+"{ System.out.println ( "" Benvenuto al gioco di Blackjack ! "" ) ; while ( true ) { System.out.println ( "" \ nNuova mano ! "" ) ; dealInitialCards ( ) ; displayHands ( true ) ; <mask> ( isBlackjack ( playerHand ) ) { System.out.println ( "" Blackjack ! Hai vinto ! "" ) ; } else { playerTurn ( ) ; if ( calculateScore ( playerHand ) > TARGET_SCORE ) { System.out.println ( "" Hai superato il punteggio massimo ! Hai perso ! "" ) ; } else { dealerTurn ( ) ; determineWinner ( ) ; } } System.out.println ( "" \ nVuoi giocare ancora ? ( s / n ) "" ) ; String choice = scanner.nextLine ( ) ; if ( ! choice.equalsIgnoreCase ( "" s "" ) ) { break ; } resetGame ( ) ; } System.out.println ( "" Grazie per aver giocato ! "" ) ; scanner.close ( ) ; }"#if#True#if
+"while ( true ) { System.out.println ( "" \ nNuova mano ! "" ) ; dealInitialCards ( ) ; displayHands ( true ) ; if ( isBlackjack ( playerHand ) ) { System.out.println ( "" Blackjack ! Hai vinto ! "" ) ; } <mask> { playerTurn ( ) ; if ( calculateScore ( playerHand ) > TARGET_SCORE ) { System.out.println ( "" Hai superato il punteggio massimo ! Hai perso ! "" ) ; } else { dealerTurn ( ) ; determineWinner ( ) ; } } System.out.println ( "" \ nVuoi giocare ancora ? ( s / n ) "" ) ; String choice = scanner.nextLine ( ) ; if ( ! choice.equalsIgnoreCase ( "" s "" ) ) { break ; } resetGame ( ) ; }"#else#True#else
+"{ System.out.println ( "" \ nNuova mano ! "" ) ; dealInitialCards ( ) ; displayHands ( true ) ; if ( isBlackjack ( playerHand ) ) { System.out.println ( "" Blackjack ! Hai vinto ! "" ) ; } <mask> { playerTurn ( ) ; if ( calculateScore ( playerHand ) > TARGET_SCORE ) { System.out.println ( "" Hai superato il punteggio massimo ! Hai perso ! "" ) ; } else { dealerTurn ( ) ; determineWinner ( ) ; } } System.out.println ( "" \ nVuoi giocare ancora ? ( s / n ) "" ) ; String choice = scanner.nextLine ( ) ; if ( ! choice.equalsIgnoreCase ( "" s "" ) ) { break ; } resetGame ( ) ; }"#else#True#else
+"<mask> ( isBlackjack ( playerHand ) ) { System.out.println ( "" Blackjack ! Hai vinto ! "" ) ; } else { playerTurn ( ) ; if ( calculateScore ( playerHand ) > TARGET_SCORE ) { System.out.println ( "" Hai superato il punteggio massimo ! Hai perso ! "" ) ; } else { dealerTurn ( ) ; determineWinner ( ) ; } }"#if#True#if
+"{ playerTurn ( ) ; if ( calculateScore ( playerHand ) > TARGET_SCORE ) { System.out.println ( "" Hai superato il punteggio massimo ! Hai perso ! "" ) ; } <mask> { dealerTurn ( ) ; determineWinner ( ) ; } }"#else#True#else
+"<mask> ( calculateScore ( playerHand ) > TARGET_SCORE ) { System.out.println ( "" Hai superato il punteggio massimo ! Hai perso ! "" ) ; } else { dealerTurn ( ) ; determineWinner ( ) ; }"#if#True#if
+"if ( ! choice.equalsIgnoreCase ( "" s "" ) ) { <mask> ; }"#break#False#
+{ <mask> ; }#break#True#break
+{ <mask> ( deck.isEmpty ( ) ) { initializeDeck ( ) ; } return deck.remove ( 0 ) ; }#if#True#if
+<mask> ( deck.isEmpty ( ) ) { initializeDeck ( ) ; }#if#True#if
+<mask> deck.remove ( 0 ) ;#return#False#
+"{ System.out.println ( "" Mano del giocatore : "" ) ; for ( Card card : playerHand ) { System.out.println ( card ) ; } System.out.println ( "" Punteggio del giocatore : "" + calculateScore ( playerHand ) ) ; System.out.println ( "" \ nMano del dealer : "" ) ; <mask> ( hideDealerCard ) { System.out.println ( dealerHand.get ( 0 ) ) ; System.out.println ( "" Carta nascosta "" ) ; } else { for ( Card card : dealerHand ) { System.out.println ( card ) ; } System.out.println ( "" Punteggio del dealer : "" + calculateScore ( dealerHand ) ) ; } }"#if#True#if
+<mask> ( Card card : playerHand ) { System.out.println ( card ) ; }#for#True#for
+"if ( hideDealerCard ) { System.out.println ( dealerHand.get ( 0 ) ) ; System.out.println ( "" Carta nascosta "" ) ; } else { <mask> ( Card card : dealerHand ) { System.out.println ( card ) ; } System.out.println ( "" Punteggio del dealer : "" + calculateScore ( dealerHand ) ) ; }"#for#True#for
+"{ <mask> ( Card card : dealerHand ) { System.out.println ( card ) ; } System.out.println ( "" Punteggio del dealer : "" + calculateScore ( dealerHand ) ) ; }"#for#True#for
+<mask> ( Card card : dealerHand ) { System.out.println ( card ) ; }#for#True#for
+{ <mask> hand.size ( ) == 2 & & calculateScore ( hand ) == TARGET_SCORE ; }#return#True#return
+<mask> hand.size ( ) == 2 & & calculateScore ( hand ) == TARGET_SCORE ;#return#False#
+{ int score = 0 ; int aceCount = 0 ; <mask> ( Card card : hand ) { if ( card.getRank ( ) == Rank.ACE ) { aceCount + + ; } score + = card.getValue ( ) ; } while ( aceCount > 0 & & score > TARGET_SCORE ) { score - = 10 ; aceCount -- ; } return score ; }#for#True#for
+<mask> score = 0 ;#int#False#
+<mask> aceCount = 0 ;#int#False#
+for ( Card card : hand ) { <mask> ( card.getRank ( ) == Rank.ACE ) { aceCount + + ; } score + = card.getValue ( ) ; }#if#True#if
+{ <mask> ( card.getRank ( ) == Rank.ACE ) { aceCount + + ; } score + = card.getValue ( ) ; }#if#True#if
+<mask> ( card.getRank ( ) == Rank.ACE ) { aceCount + + ; }#if#True#if
+<mask> ( aceCount > 0 & & score > TARGET_SCORE ) { score - = 10 ; aceCount -- ; }#while#True#while
+<mask> score ;#return#False#
+"{ while ( true ) { System.out.println ( "" \ nVuoi ( h ) it o ( s ) tand ? "" ) ; String choice = scanner.nextLine ( ) ; if ( choice.equalsIgnoreCase ( "" h "" ) ) { playerHand.add ( drawCard ( ) ) ; displayHands ( true ) ; if ( calculateScore ( playerHand ) > = TARGET_SCORE ) { <mask> ; } } else { break ; } } }"#break#True#break
+"while ( true ) { System.out.println ( "" \ nVuoi ( h ) it o ( s ) tand ? "" ) ; String choice = scanner.nextLine ( ) ; if ( choice.equalsIgnoreCase ( "" h "" ) ) { playerHand.add ( drawCard ( ) ) ; displayHands ( true ) ; if ( calculateScore ( playerHand ) > = TARGET_SCORE ) { <mask> ; } } else { break ; } }"#break#True#break
+"{ System.out.println ( "" \ nVuoi ( h ) it o ( s ) tand ? "" ) ; String choice = scanner.nextLine ( ) ; if ( choice.equalsIgnoreCase ( "" h "" ) ) { playerHand.add ( drawCard ( ) ) ; displayHands ( true ) ; if ( calculateScore ( playerHand ) > = TARGET_SCORE ) { <mask> ; } } else { break ; } }"#break#True#break
+"if ( choice.equalsIgnoreCase ( "" h "" ) ) { playerHand.add ( drawCard ( ) ) ; displayHands ( true ) ; <mask> ( calculateScore ( playerHand ) > = TARGET_SCORE ) { break ; } } else { break ; }"#if#True#if
+{ playerHand.add ( drawCard ( ) ) ; displayHands ( true ) ; <mask> ( calculateScore ( playerHand ) > = TARGET_SCORE ) { break ; } }#if#True#if
+if ( calculateScore ( playerHand ) > = TARGET_SCORE ) { <mask> ; }#break#False#
+{ <mask> ; }#break#True#break
+{ <mask> ; }#break#True#break
+"{ displayHands ( false ) ; while ( calculateScore ( dealerHand ) < DEALER_THRESHOLD ) { dealerHand.add ( drawCard ( ) ) ; System.out.println ( "" \ nIl dealer colpisce ... "" ) ; displayHands ( false ) ; if ( calculateScore ( dealerHand ) > = TARGET_SCORE ) { <mask> ; } } }"#break#True#break
+"while ( calculateScore ( dealerHand ) < DEALER_THRESHOLD ) { dealerHand.add ( drawCard ( ) ) ; System.out.println ( "" \ nIl dealer colpisce ... "" ) ; displayHands ( false ) ; <mask> ( calculateScore ( dealerHand ) > = TARGET_SCORE ) { break ; } }"#if#True#if
+"{ dealerHand.add ( drawCard ( ) ) ; System.out.println ( "" \ nIl dealer colpisce ... "" ) ; displayHands ( false ) ; <mask> ( calculateScore ( dealerHand ) > = TARGET_SCORE ) { break ; } }"#if#True#if
+if ( calculateScore ( dealerHand ) > = TARGET_SCORE ) { <mask> ; }#break#False#
+{ <mask> ; }#break#True#break
+"{ int playerScore = calculateScore ( playerHand ) ; int dealerScore = calculateScore ( dealerHand ) ; if ( playerScore > TARGET_SCORE ) { System.out.println ( "" Il giocatore ha perso ! Hai superato il punteggio massimo . "" ) ; } <mask> if ( dealerScore > TARGET_SCORE | | playerScore > dealerScore ) { System.out.println ( "" Il giocatore ha vinto ! "" ) ; } else if ( playerScore < dealerScore ) { System.out.println ( "" Il giocatore ha perso ! "" ) ; } else { System.out.println ( "" Pareggio ! "" ) ; } }"#else#True#else
+<mask> playerScore = calculateScore ( playerHand ) ;#int#False#
+<mask> dealerScore = calculateScore ( dealerHand ) ;#int#False#
+"if ( playerScore > TARGET_SCORE ) { System.out.println ( "" Il giocatore ha perso ! Hai superato il punteggio massimo . "" ) ; } else <mask> ( dealerScore > TARGET_SCORE | | playerScore > dealerScore ) { System.out.println ( "" Il giocatore ha vinto ! "" ) ; } else if ( playerScore < dealerScore ) { System.out.println ( "" Il giocatore ha perso ! "" ) ; } else { System.out.println ( "" Pareggio ! "" ) ; }"#if#True#if
+"if ( dealerScore > TARGET_SCORE | | playerScore > dealerScore ) { System.out.println ( "" Il giocatore ha vinto ! "" ) ; } else if ( playerScore < dealerScore ) { System.out.println ( "" Il giocatore ha perso ! "" ) ; } <mask> { System.out.println ( "" Pareggio ! "" ) ; }"#else#True#else
+"<mask> ( playerScore < dealerScore ) { System.out.println ( "" Il giocatore ha perso ! "" ) ; } else { System.out.println ( "" Pareggio ! "" ) ; }"#if#True#if
+{ BlackjackGame game = <mask> BlackjackGame ( ) ; game.startGame ( ) ; }#new#True#new
+BlackjackGame game = <mask> BlackjackGame ( ) ;#new#True#new
+{ <mask> rank ; }#return#True#return
+<mask> rank ;#return#False#
+{ <mask> suit ; }#return#True#return
+<mask> suit ;#return#False#
+{ <mask> rank.getValue ( ) ; }#return#True#return
+<mask> rank.getValue ( ) ;#return#True#return
+"{ <mask> rank + "" di "" + suit ; }"#return#True#return
+"<mask> rank + "" di "" + suit ;"#return#True#return
+{ <mask> value ; }#return#True#return
+<mask> value ;#return#False#
+"{ System.out.println ( "" Inizio del programma . "" ) ; Magazzino <Prodotto> magazzino = new Magazzino < > ( ) ; magazzino.aggiungiProdotto ( new Prodotto ( "" P001 "" , "" Libro "" , 15.99 ) ) ; magazzino.aggiungiProdotto ( new Prodotto ( "" P002 "" , "" Penna "" , 1.99 ) ) ; magazzino.aggiungiProdotto ( new Prodotto ( "" P003 "" , "" Quaderno "" , 3.49 ) ) ; magazzino.stampaInventario ( ) ; Cliente cliente = <mask> Cliente ( "" Alice "" , "" Via Roma 1 "" ) ; Ordine <Prodotto> ordine = new Ordine < > ( ) ; ordine.aggiungiProdotto ( magazzino.trovaProdotto ( "" P001 "" ) , 2 ) ; ordine.aggiungiProdotto ( magazzino.trovaProdotto ( "" P002 "" ) , 1 ) ; try { cliente.effettuaOrdine ( ordine ) ; System.out.println ( "" Ordine effettuato con successo ! "" ) ; } catch ( ProdottoNonDisponibileException e ) { System.out.println ( "" Errore : "" + e.getMessage ( ) ) ; } System.out.println ( "" Fine del programma . "" ) ; }"#new#True#new
+Magazzino <Prodotto> magazzino = <mask> Magazzino < > ( ) ;#new#True#new
+"magazzino.aggiungiProdotto ( <mask> Prodotto ( "" P001 "" , "" Libro "" , 15.99 ) ) ;"#new#True#new
+"magazzino.aggiungiProdotto ( <mask> Prodotto ( "" P002 "" , "" Penna "" , 1.99 ) ) ;"#new#True#new
+"magazzino.aggiungiProdotto ( <mask> Prodotto ( "" P003 "" , "" Quaderno "" , 3.49 ) ) ;"#new#True#new
+"Cliente cliente = <mask> Cliente ( "" Alice "" , "" Via Roma 1 "" ) ;"#new#True#new
+Ordine <Prodotto> ordine = <mask> Ordine < > ( ) ;#new#True#new
+"<mask> { cliente.effettuaOrdine ( ordine ) ; System.out.println ( "" Ordine effettuato con successo ! "" ) ; } catch ( ProdottoNonDisponibileException e ) { System.out.println ( "" Errore : "" + e.getMessage ( ) ) ; }"#try#True#try
+{ <mask> codice ; }#return#True#return
+<mask> codice ;#return#False#
+{ <mask> nome ; }#return#True#return
+<mask> nome ;#return#False#
+{ <mask> prezzo ; }#return#True#return
+<mask> prezzo ;#return#False#
+{ <mask> ( message ) ; }#super#False#
+<mask> ( message ) ;#super#False#
+{ <mask> prodotti ; }#return#True#return
+<mask> prodotti ;#return#False#
+"{ <mask> ( Map.Entry < T , Integer > entry : ordine.getProdotti ( ) . entrySet ( ) ) { T prodotto = entry.getKey ( ) ; int quantita = entry.getValue ( ) ; if ( prodotto == null ) { throw new ProdottoNonDisponibileException ( "" Prodotto non disponibile . "" ) ; } System.out.println ( "" Prodotto acquistato : "" + prodotto.getNome ( ) + "" ( Quantità : "" + quantita + "" ) "" ) ; } }"#for#True#for
+"for ( Map.Entry < T , Integer > entry : ordine.getProdotti ( ) . entrySet ( ) ) { T prodotto = entry.getKey ( ) ; int quantita = entry.getValue ( ) ; if ( prodotto == null ) { throw <mask> ProdottoNonDisponibileException ( "" Prodotto non disponibile . "" ) ; } System.out.println ( "" Prodotto acquistato : "" + prodotto.getNome ( ) + "" ( Quantità : "" + quantita + "" ) "" ) ; }"#new#True#new
+"{ T prodotto = entry.getKey ( ) ; int quantita = entry.getValue ( ) ; if ( prodotto == null ) { throw <mask> ProdottoNonDisponibileException ( "" Prodotto non disponibile . "" ) ; } System.out.println ( "" Prodotto acquistato : "" + prodotto.getNome ( ) + "" ( Quantità : "" + quantita + "" ) "" ) ; }"#new#True#new
+<mask> quantita = entry.getValue ( ) ;#int#False#
+"<mask> ( prodotto == null ) { throw new ProdottoNonDisponibileException ( "" Prodotto non disponibile . "" ) ; }"#if#True#if
+"{ <mask> new ProdottoNonDisponibileException ( "" Prodotto non disponibile . "" ) ; }"#throw#True#throw
+"throw <mask> ProdottoNonDisponibileException ( "" Prodotto non disponibile . "" ) ;"#new#True#new
+"{ System.out.println ( "" Inventario del magazzino : "" ) ; <mask> ( T prodotto : inventario ) { System.out.println ( prodotto.getCodice ( ) + "" - "" + prodotto.getNome ( ) + "" - Prezzo : "" + prodotto.getPrezzo ( ) ) ; } }"#for#True#for
+"<mask> ( T prodotto : inventario ) { System.out.println ( prodotto.getCodice ( ) + "" - "" + prodotto.getNome ( ) + "" - Prezzo : "" + prodotto.getPrezzo ( ) ) ; }"#for#True#for
+{ for ( T prodotto : inventario ) { if ( prodotto instanceof Prodotto ) { if ( ( ( Prodotto ) prodotto ) . getCodice ( ) . equals ( codice ) ) { return prodotto ; } } } <mask> null ; }#return#True#return
+for ( T prodotto : inventario ) { if ( prodotto <mask> Prodotto ) { if ( ( ( Prodotto ) prodotto ) . getCodice ( ) . equals ( codice ) ) { return prodotto ; } } }#instanceof#False#
+{ if ( prodotto <mask> Prodotto ) { if ( ( ( Prodotto ) prodotto ) . getCodice ( ) . equals ( codice ) ) { return prodotto ; } } }#instanceof#False#
+if ( prodotto instanceof Prodotto ) { if ( ( ( Prodotto ) prodotto ) . getCodice ( ) . equals ( codice ) ) { <mask> prodotto ; } }#return#True#return
+{ if ( ( ( Prodotto ) prodotto ) . getCodice ( ) . equals ( codice ) ) { <mask> prodotto ; } }#return#True#return
+if ( ( ( Prodotto ) prodotto ) . getCodice ( ) . equals ( codice ) ) { <mask> prodotto ; }#return#True#return
+{ <mask> prodotto ; }#return#True#return
+<mask> prodotto ;#return#False#
+<mask> null ;#return#False#
