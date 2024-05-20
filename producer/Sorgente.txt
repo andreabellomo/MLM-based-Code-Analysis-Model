@@ -1,142 +1,332 @@
-package com.example;
+import java.util.*;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+public class BlackjackGame {
+    private static final int TARGET_SCORE = 21;
+    private static final int DEALER_THRESHOLD = 17;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.*;
+    private List<Card> deck;
+    private List<Card> playerHand;
+    private List<Card> dealerHand;
+    private Scanner scanner;
 
-
-public class bookStoreServlet extends HttpServlet{
-
-  private Connection dbConnection = null;
-
-  @Override
-  public void init() {
-      try {
-          Class.forName("com.mysql.cj.jdbc.Driver");
-
-          String DATABASE_URL = "jdbc:mysql://localhost/php_db";
-          String dbUsername = "root";
-          String dbPassword = "giovanni";
-          dbConnection = DriverManager.getConnection(DATABASE_URL, dbUsername, dbPassword);
-          System.out.println("Connected to: " + dbConnection.toString());
-      } catch (ClassNotFoundException | SQLException e) {
-          e.printStackTrace();
-      }
-  }
-
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    response.setContentType("text/html");
-    PrintWriter out = response.getWriter();
-
-    out.println("<html><head><title>Libreria</title></head>");
-    out.println("<body><h1>Benvenuto nella tua libreria</h1>");
-
-    try{
-      Statement statement = dbConnection.createStatement();
-      String query = "SELECT * FROM Books";
-      ResultSet resultSet = statement.executeQuery(query);
-
-      out.println("<ul>");
-
-      while(resultSet.next()){
-        out.println("<li>");
-        out.println("<form method=\"post\">");
-        out.println("<input type=\"text\" name=\"title\" value=\"" + resultSet.getString("title") + "\" />");
-        out.println("<input type=\"Submit\" value=\"detail\" name=\"action\"/>");
-        out.println("</form>");
-        out.println("</li><br>");
-      }
-
-      out.println("</ul>");
-
-    }catch(SQLException e){e.printStackTrace();}
-
-    out.println("<br><br>Aggiungi un nuovo libro<br>");
-
-    out.println("<form method=\"post\">");
-    out.println("Title: <input name=\"title\" required /><br>");
-    out.println("Author: <input name=\"author\" required /><br>");
-    out.println("Year: <input name=\"year\" required/>");
-    out.println("<input type=\"Submit\" value=\"insert\" name=\"action\"/>");
-    out.println("</form>");
-
-    out.println("</body></html>");
-  }
-
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-    String action = request.getParameter("action");
-    PrintWriter out = response.getWriter();
-    switch(action){
-      case "insert": {
-        String title = request.getParameter("title");
-        String author = request.getParameter("author");
-        String year = request.getParameter("year");
-    
-        try {
-          String query = "INSERT INTO Books (title, author, year) VALUES (?,?,?)"; 
-          PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
-          preparedStatement.setString(1, title);
-          preparedStatement.setString(2, author);
-          preparedStatement.setString(3, year);
-    
-          preparedStatement.executeUpdate();
-    
-          System.out.println("New book added");
-
-          response.sendRedirect(request.getContextPath() + "/books");
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      }
-      break;
-
-      case "detail": {
-        out.println("<html><head><title>Libreria</title></head>");
-        out.println("<body><h1>About Page</h1>");
-        String title = request.getParameter("title");
-        System.out.println(title);
-        String query = "SELECT * FROM Books WHERE title = ?";
-        try {
-          PreparedStatement preparedStatement = dbConnection.prepareStatement(query);
-          preparedStatement.setString(1, title);      
-          ResultSet resultSet = preparedStatement.executeQuery();
-          System.out.println(resultSet);
-          while(resultSet.next()){
-            out.println("<form method=\"post\">");
-            out.println("Title: " + "<input type=\"text\" name=\"title\" value=\"" + resultSet.getString("title") + "\" />");
-            out.println("Author: " + "<input type=\"text\" name=\"title\" value=\"" + resultSet.getString("author") + "\" />");
-            out.println("Year: " + "<input type=\"text\" name=\"title\" value=\"" + resultSet.getString("year") + "\" />");
-            out.println("<input type=\"Submit\" value=\"update\" name=\"action\" />");
-            out.println("<input type=\"Submit\" value=\"delete\" name=\"action\" />");
-            out.println("</form>");
-          }
-        out.println("</body></html>");
-
-          
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-
-      }
+    public BlackjackGame() {
+        deck = new ArrayList<>();
+        playerHand = new ArrayList<>();
+        dealerHand = new ArrayList<>();
+        scanner = new Scanner(System.in);
+        initializeDeck();
     }
 
-    
-
-  }
-
-  public void destroy(){
-    try {
-      dbConnection.close();
-    } catch (Exception e) {
-      e.printStackTrace();
+    private void initializeDeck() {
+        for (Suit suit : Suit.values()) {
+            for (Rank rank : Rank.values()) {
+                deck.add(new Card(rank, suit));
+            }
+        }
+        Collections.shuffle(deck);
     }
-  }
 
+    public void startGame() {
+        System.out.println("Benvenuto al gioco di Blackjack!");
+        while (true) {
+            System.out.println("\nNuova mano!");
+            dealInitialCards();
+            displayHands(true);
 
+            if (isBlackjack(playerHand)) {
+                System.out.println("Blackjack! Hai vinto!");
+            } else {
+                playerTurn();
+                if (calculateScore(playerHand) > TARGET_SCORE) {
+                    System.out.println("Hai superato il punteggio massimo! Hai perso!");
+                } else {
+                    dealerTurn();
+                    determineWinner();
+                }
+            }
 
-  
+            System.out.println("\nVuoi giocare ancora? (s/n)");
+            String choice = scanner.nextLine();
+            if (!choice.equalsIgnoreCase("s")) {
+                break;
+            }
+            resetGame();
+        }
+        System.out.println("Grazie per aver giocato!");
+        scanner.close();
+    }
+
+    private void dealInitialCards() {
+        playerHand.clear();
+        dealerHand.clear();
+        playerHand.add(drawCard());
+        dealerHand.add(drawCard());
+        playerHand.add(drawCard());
+        dealerHand.add(drawCard());
+    }
+
+    private Card drawCard() {
+        if (deck.isEmpty()) {
+            initializeDeck();
+        }
+        return deck.remove(0);
+    }
+
+    private void displayHands(boolean hideDealerCard) {
+        System.out.println("Mano del giocatore:");
+        for (Card card : playerHand) {
+            System.out.println(card);
+        }
+        System.out.println("Punteggio del giocatore: " + calculateScore(playerHand));
+
+        System.out.println("\nMano del dealer:");
+        if (hideDealerCard) {
+            System.out.println(dealerHand.get(0));
+            System.out.println("Carta nascosta");
+        } else {
+            for (Card card : dealerHand) {
+                System.out.println(card);
+            }
+            System.out.println("Punteggio del dealer: " + calculateScore(dealerHand));
+        }
+    }
+
+    private boolean isBlackjack(List<Card> hand) {
+        return hand.size() == 2 && calculateScore(hand) == TARGET_SCORE;
+    }
+
+    private int calculateScore(List<Card> hand) {
+        int score = 0;
+        int aceCount = 0;
+        for (Card card : hand) {
+            if (card.getRank() == Rank.ACE) {
+                aceCount++;
+            }
+            score += card.getValue();
+        }
+        while (aceCount > 0 && score > TARGET_SCORE) {
+            score -= 10;
+            aceCount--;
+        }
+        return score;
+    }
+
+    private void playerTurn() {
+        while (true) {
+            System.out.println("\nVuoi (h)it o (s)tand?");
+            String choice = scanner.nextLine();
+            if (choice.equalsIgnoreCase("h")) {
+                playerHand.add(drawCard());
+                displayHands(true);
+                if (calculateScore(playerHand) >= TARGET_SCORE) {
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+    }
+
+    private void dealerTurn() {
+        displayHands(false);
+        while (calculateScore(dealerHand) < DEALER_THRESHOLD) {
+            dealerHand.add(drawCard());
+            System.out.println("\nIl dealer colpisce...");
+            displayHands(false);
+            if (calculateScore(dealerHand) >= TARGET_SCORE) {
+                break;
+            }
+        }
+    }
+
+    private void determineWinner() {
+        int playerScore = calculateScore(playerHand);
+        int dealerScore = calculateScore(dealerHand);
+        if (playerScore > TARGET_SCORE) {
+            System.out.println("Il giocatore ha perso! Hai superato il punteggio massimo.");
+        } else if (dealerScore > TARGET_SCORE || playerScore > dealerScore) {
+            System.out.println("Il giocatore ha vinto!");
+        } else if (playerScore < dealerScore) {
+            System.out.println("Il giocatore ha perso!");
+        } else {
+            System.out.println("Pareggio!");
+        }
+    }
+
+    public static void main(String[] args) {
+        BlackjackGame game = new BlackjackGame();
+        game.startGame();
+    }
 }
 
+class Card {
+    private Rank rank;
+    private Suit suit;
+
+    public Card(Rank rank, Suit suit) {
+        this.rank = rank;
+        this.suit = suit;
+    }
+
+    public Rank getRank() {
+        return rank;
+    }
+
+    public Suit getSuit() {
+        return suit;
+    }
+
+    public int getValue() {
+        return rank.getValue();
+    }
+
+    @Override
+    public String toString() {
+        return rank + " di " + suit;
+    }
+}
+
+enum Rank {
+    TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9), TEN(10), JACK(10), QUEEN(10), KING(10), ACE(11);
+
+    private int value;
+
+    Rank(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+}
+
+enum Suit {
+    HEARTS, DIAMONDS, CLUBS, SPADES;
+}
+
+// codice 2 
+
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Inizio del programma.");
+
+        Magazzino<Prodotto> magazzino = new Magazzino<>();
+
+        magazzino.aggiungiProdotto(new Prodotto("P001", "Libro", 15.99));
+        magazzino.aggiungiProdotto(new Prodotto("P002", "Penna", 1.99));
+        magazzino.aggiungiProdotto(new Prodotto("P003", "Quaderno", 3.49));
+
+        magazzino.stampaInventario();
+
+        Cliente cliente = new Cliente("Alice", "Via Roma 1");
+
+        Ordine<Prodotto> ordine = new Ordine<>();
+        ordine.aggiungiProdotto(magazzino.trovaProdotto("P001"), 2);
+        ordine.aggiungiProdotto(magazzino.trovaProdotto("P002"), 1);
+
+        try {
+            cliente.effettuaOrdine(ordine);
+            System.out.println("Ordine effettuato con successo!");
+        } catch (ProdottoNonDisponibileException e) {
+            System.out.println("Errore: " + e.getMessage());
+        }
+
+        System.out.println("Fine del programma.");
+    }
+}
+
+interface Acquistabile {
+    double getPrezzo();
+}
+
+class Prodotto implements Acquistabile {
+    private String codice;
+    private String nome;
+    private double prezzo;
+
+    public Prodotto(String codice, String nome, double prezzo) {
+        this.codice = codice;
+        this.nome = nome;
+        this.prezzo = prezzo;
+    }
+
+    public String getCodice() {
+        return codice;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    @Override
+    public double getPrezzo() {
+        return prezzo;
+    }
+}
+
+class ProdottoNonDisponibileException extends Exception {
+    public ProdottoNonDisponibileException(String message) {
+        super(message);
+    }
+}
+
+class Ordine<T extends Acquistabile> {
+    private Map<T, Integer> prodotti = new HashMap<>();
+
+    public void aggiungiProdotto(T prodotto, int quantita) {
+        prodotti.put(prodotto, quantita);
+    }
+
+    public Map<T, Integer> getProdotti() {
+        return prodotti;
+    }
+}
+
+class Cliente {
+    private String nome;
+    private String indirizzo;
+
+    public Cliente(String nome, String indirizzo) {
+        this.nome = nome;
+        this.indirizzo = indirizzo;
+    }
+
+    public <T extends Acquistabile> void effettuaOrdine(Ordine<T> ordine) throws ProdottoNonDisponibileException {
+        for (Map.Entry<T, Integer> entry : ordine.getProdotti().entrySet()) {
+            T prodotto = entry.getKey();
+            int quantita = entry.getValue();
+            if (prodotto == null) {
+                throw new ProdottoNonDisponibileException("Prodotto non disponibile.");
+            }
+            System.out.println("Prodotto acquistato: " + prodotto.getNome() + " (Quantità: " + quantita + ")");
+        }
+    }
+}
+
+class Magazzino<T extends Acquistabile> {
+    private List<T> inventario = new ArrayList<>();
+
+    public void aggiungiProdotto(T prodotto) {
+        inventario.add(prodotto);
+    }
+
+    public void stampaInventario() {
+        System.out.println("Inventario del magazzino:");
+        for (T prodotto : inventario) {
+            System.out.println(prodotto.getCodice() + " - " + prodotto.getNome() + " - Prezzo: " + prodotto.getPrezzo());
+        }
+    }
+
+    public T trovaProdotto(String codice) {
+        for (T prodotto : inventario) {
+            if (prodotto instanceof Prodotto) {
+                if (((Prodotto) prodotto).getCodice().equals(codice)) {
+                    return prodotto;
+                }
+            }
+        }
+        return null;
+    }
+}

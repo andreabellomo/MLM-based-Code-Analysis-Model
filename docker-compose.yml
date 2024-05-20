@@ -34,6 +34,8 @@ services:
     depends_on:
       rabbitmq-container:
         condition: service_healthy
+    volumes:
+      - ./data:/app/data
 
 networks:
   mynet:

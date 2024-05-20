@@ -1,10 +1,12 @@
 ## eseguire prima D.txt rinominandolo Dockerfile per creare l'immaggine reciver_requirements con tutti i requisiti installati. Dopodiche eseguire compose.
 
-FROM reciver_requirements
+FROM python_req
 
 WORKDIR /app
 
 COPY . .
+
+#RUN pip install -r ./consumer/requirements.txt
 
 WORKDIR /app
 
